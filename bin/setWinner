@@ -1,0 +1,71 @@
+#!/usr/bin/env node
+
+var redis = require('redis').createClient(process.env.REDIS_URL);
+
+var getTodaysScores = function()
+{
+	var currentDate, multi;
+	multi = redis.multi();
+	currentDate = getCurrentDay();
+	multi.zrange(currentDate.toString(), 0, -1, 'withscores');
+	multi.exec(informationReceived.bind({"client": redis}));
+}
+
+var informationReceived = function(err, replies)
+{
+	var winners, multi;
+	multi = this.client.multi();
+	winners = getWinners(replies[0]);
+	for (var i = 0; i < winners.length; i++)
+	{
+		multi.lpush("winnersList", winners[i]);
+	}
+	if (winners.length > 0)
+	{
+		multi.exec(winsAdded.bind({"client": this.client}));
+	}
+	else
+	{
+		this.client.quit();
+	}
+}
+
+var getWinners = function (scores)
+{
+	var winners = [];
+	var minTime = 999;
+	var score, name, i;
+	for (i = 0; i < scores.length; i++)
+	{
+		name = scores[i];
+		score = scores[i+1];
+		if (Number(score) <= minTime)
+		{
+			winners.push(name);
+			minTime = Number(score);
+		}
+		else
+		{
+			return winners;
+		}
+		i++;
+	}
+	return winners;
+}
+
+var winsAdded = function()
+{
+	this.client.quit();
+}
+
+function getCurrentDay()
+{
+	var day, currentDate, startDate, dayInUTC;
+	currentDate = new Date();
+	startDate = new Date(2017, 3, 17, 0, 0, 0, 0);
+	dayInUTC = currentDate.getTime() - startDate.getTime() - (1000 * 60 *60);
+	day = (dayInUTC / (1000 * 60 * 60 * 24));
+	return Math.floor(day);
+}
+
+getTodaysScores();

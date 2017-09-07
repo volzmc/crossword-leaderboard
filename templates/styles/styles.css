@@ -1,0 +1,48 @@
+table.timetable {
+	width: 100%;
+	text-align: center;
+}
+
+table, th, td {
+	font-size: x-large;
+	border: 1px solid lightgray;
+	border-collapse: collapse;
+}
+
+th {
+	background-color: #4CAF50;
+	color: white;
+}
+
+tr:nth-child(even) {
+	background-color: #f2f2f2;
+}
+
+.place {
+	width: 85px;
+}
+
+.tableDiv {
+	max-width: 800px;
+	margin: 30 auto;
+	padding: 1px 20px 20px 20px;
+	background-color: white;
+	border-radius: 5px;
+	box-shadow: 0 4px 8px 0 rgba(0,0,0,.2);
+}
+
+.tableDiv:hover {
+	box-shadow: 0 8px 16px 0 rgba(0,0,0,.2);
+}
+
+h1, h2 {
+	text-align: center;
+}
+
+h1 {
+	font-size: 3rem;
+}
+
+body {
+	background-color: #f2f2f2;
+}

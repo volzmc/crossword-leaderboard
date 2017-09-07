@@ -1,0 +1,68 @@
+html
+	head
+		style
+			include styles/styles.css
+
+	body
+
+		h1 Crossword Leaderboard
+
+		div(class="tableDiv")
+			div(class="todaysScores")
+				h2 Today's Scores
+				table(class="timetable")
+					thead
+						tr
+							th(class="place")
+							th Player
+							th Time
+					tbody
+						each dataRow in todaysScores
+							tr
+								td=dataRow.place
+								td=dataRow.name
+								td=dataRow.time
+
+		div(class="tableDiv")
+			div(class="streakInfo")
+				h2 Current Winner
+				table(class="timetable")
+					thead
+						tr
+							th Player
+							th Current Streak
+					tbody
+						tr
+							td=streakInfo.CurrentWinner
+							td=streakInfo.CurrentStreak
+		div(class="tableDiv")
+			div(class="totalwins")
+				h2 Total Wins
+				table(class="timetable")
+					thead
+						tr
+							th Player
+							th Wins
+							th Average Time
+					tbody
+						each dataRow in winsByName
+							tr
+								td=dataRow.name
+								td=dataRow.wins
+								td=dataRow.averageTime
+		div(class="tableDiv")
+			div(class="topScores")
+				h2 Top Times
+				table(class="timetable")
+					thead
+						tr
+							th(class="place")
+							th Player
+							th Time
+					tbody
+						each dataRow in topScores
+							tr
+								td=dataRow.place
+								td=dataRow.name
+								td=dataRow.time
+		
