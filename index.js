@@ -1,7 +1,7 @@
 var http, director, router, server, port, redis, pug, express, app, https;
 
 http = require('http');
-https = require('https');
+HTTPS = require('https');
 director    = require('director');
 redis		= require('redis').createClient(process.env.REDIS_URL);
 pug = require('pug');
