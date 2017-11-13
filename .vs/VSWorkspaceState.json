@@ -2,8 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\bin",
-    "\\public"
+    "\\public",
+    "\\templates"
   ],
-  "SelectedNode": "\\package.json",
+  "SelectedNode": "\\README.md",
   "PreviewInSolutionExplorer": false
 }
