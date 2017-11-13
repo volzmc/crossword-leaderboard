@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
 var redis = require('redis').createClient(process.env.REDIS_URL);
+var HTTPS = require('https');
+var botID = process.env.BOT_ID;
 
 var getTodaysScores = function()
 {
@@ -13,15 +15,24 @@ var getTodaysScores = function()
 
 var informationReceived = function(err, replies)
 {
-	var winners, multi;
+	var winners, multi, winnerString;
+
+	winnerString = "Today's winner: ";
+
 	multi = this.client.multi();
 	winners = getWinners(replies[0]);
 	for (var i = 0; i < winners.length; i++)
 	{
 		multi.lpush("winnersList", winners[i]);
+		winnerString = winnerString + winners[i];
+		if (i !== winners.length - 1)
+		{
+			winnerString = winnerString + ", ";
+		}
 	}
 	if (winners.length > 0)
 	{
+		postMessage(winnerString);
 		multi.exec(winsAdded.bind({"client": this.client}));
 	}
 	else
@@ -66,6 +77,39 @@ function getCurrentDay()
 	dayInUTC = currentDate.getTime() - startDate.getTime() - (1000 * 60 *60);
 	day = (dayInUTC / (1000 * 60 * 60 * 24));
 	return Math.floor(day);
+}
+
+function postMessage(data) {
+    var botResponse, options, body, botReq;
+
+    botResponse = data;
+
+    options = {
+        hostname: 'api.groupme.com',
+        path: '/v3/bots/post',
+        method: 'POST'
+    };
+
+    body = {
+        "bot_id": botID,
+        "text": botResponse
+    };
+
+    botReq = HTTPS.request(options, function (res) {
+        if (res.statusCode == 202) {
+            //neat
+        } else {
+            console.log('rejecting bad status code ' + res.statusCode);
+        }
+    });
+
+    botReq.on('error', function (err) {
+        console.log('error posting message ' + JSON.stringify(err));
+    });
+    botReq.on('timeout', function (err) {
+        console.log('timeout posting message ' + JSON.stringify(err));
+    });
+    botReq.end(JSON.stringify(body));
 }
 
 getTodaysScores();
