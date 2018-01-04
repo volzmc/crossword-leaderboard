@@ -3,8 +3,9 @@
     "",
     "\\bin",
     "\\public",
-    "\\templates"
+    "\\templates",
+    "\\templates\\styles"
   ],
-  "SelectedNode": "\\README.md",
+  "SelectedNode": "\\templates\\homeview.pug",
   "PreviewInSolutionExplorer": false
 }

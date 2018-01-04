@@ -13,8 +13,13 @@ router = new director.http.Router({
   '/' : {
     post: onMessageReceived,
     get: displayHome
+    },
+  '/User/:userID': {
+      get: displayUserStats,
   }
 });
+
+//router.on('/User', displayUserStats);
 
 server = http.createServer(function (req, res) {
   req.chunks = [];
@@ -336,7 +341,14 @@ function addNewTime(data, timeString)
 
 var getAverageTime = function(playerObject)
 {
-	return scoreToTime(Math.round(Number(playerObject.totalTime) / Number(playerObject.totalDaysSubmitted)));
+    if (playerObject !== null)
+    {
+        return scoreToTime(Math.round(Number(playerObject.totalTime) / Number(playerObject.totalDaysSubmitted)));
+    }
+    else
+    {
+        return "No data";
+    }
 }
 
 function individualStatsReceived(err, obj)
@@ -386,5 +398,37 @@ function scoreToTime(score)
 		secondsString = seconds.toString();
 	}
 	return minutes + ":" + secondsString;
+}
+
+
+function displayUserStats(userID)
+{
+    var name;
+    var multi = redis.multi();
+    name = getNameFromId(userID);
+    this.res.writeHead(200, { "Content-Type": "text/html" });
+    this.res.end("<p>" + name + "</p>");
+}
+
+function getNameFromId(id)
+{
+    switch (id)
+    {
+        case "1":
+            return "Matt Volz";
+        case "2":
+            return "David Lonergan";
+        case "3":
+            return "Shafat Hossain";
+        case "4":
+            return "Ashwin R.";
+        case "4":
+            return "Alyson Meister";
+    }
+}
+
+function displayIndividualPage()
+{
+
 }
 
