@@ -33,6 +33,7 @@ var informationReceived = function(err, replies)
 	if (winners.length > 0)
 	{
 		postMessage(winnerString);
+		multi.lrange("winnersList", 0, -1);
 		multi.exec(winsAdded.bind({"client": this.client}));
 	}
 	else
@@ -64,8 +65,39 @@ var getWinners = function (scores)
 	return winners;
 }
 
-var winsAdded = function()
+var winsAdded = function(err, replies)
 {
+	var winnersList = replies[0];
+	var winnerMap = {};
+	var seasonWinner = null;
+
+	for (var i = 0; i < winnersList.length; i++)
+	{
+		if (!winnerMap[winnersList[i]])
+		{
+			winnerMap[winnersList[i]] = 1;
+		}
+		else
+		{
+			winnerMap[winnersList[i]]++;
+		}
+	}
+
+	for (var key in winnerMap)
+	{
+		if (winnerMap[key] >= 5)
+		{
+			seasonWinner = key;
+		}
+	}
+
+	if (seasonWinner)
+	{
+		this.client.lpush("seasonWinners", seasonWinner);
+		var message = "Season Winner: " + seasonWinner;
+		postMessage(message);
+	}
+
 	this.client.quit();
 }
 
