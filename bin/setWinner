@@ -13,6 +13,18 @@ var getTodaysScores = function()
 	multi.exec(informationReceived.bind({"client": redis}));
 }
 
+var checkSeasonWinner()
+{
+	var multi = redis.multi();
+	multi.lrange("winnersList", 0, -1);
+	multi.exec(winsAdded.bind({"client": this.client}));
+}
+
+var quitClient()
+{
+	this.client.quit();
+}
+
 var informationReceived = function(err, replies)
 {
 	var winners, multi, winnerString;
@@ -33,12 +45,10 @@ var informationReceived = function(err, replies)
 	if (winners.length > 0)
 	{
 		postMessage(winnerString);
-		multi.lrange("winnersList", 0, -1);
-		multi.exec(winsAdded.bind({"client": this.client}));
 	}
 	else
 	{
-		this.client.quit();
+		quitClient();
 	}
 }
 
@@ -93,12 +103,16 @@ var winsAdded = function(err, replies)
 
 	if (seasonWinner)
 	{
-		this.client.lpush("seasonWinners", seasonWinner);
+		var seasonMulti = this.client.multi();
+		seasonMulti.lpush("seasonWinners", seasonWinner);
+		seasonMulti.del("winnersList");
+		seasonMulti.del("scoreIndex");
 		var message = "Season Winner: " + seasonWinner;
 		postMessage(message);
+		seasonMulti.exec();
 	}
 
-	this.client.quit();
+	quitClient();
 }
 
 function getCurrentDay()
