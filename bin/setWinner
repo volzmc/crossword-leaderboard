@@ -45,7 +45,7 @@ var informationReceived = function(err, replies)
 	if (winners.length > 0)
 	{
 		postMessage(winnerString);
-		multi.exec(winsAdded.bind({"client": this.client}));
+		multi.exec(checkSeasonWinner.bind({"client": this.client}));
 	}
 	else
 	{
@@ -78,7 +78,7 @@ var getWinners = function (scores)
 
 var winsAdded = function(err, replies)
 {
-	var winnersList = replies[1];
+	var winnersList = replies[0];
 	var winnerMap = {};
 	var seasonWinner = null;
 
