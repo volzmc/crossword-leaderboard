@@ -20,9 +20,9 @@ var checkSeasonWinner = function()
 	multi.exec(winsAdded.bind({"client": this.client}));
 }
 
-var quitClient = function()
+var quitClient = function(client)
 {
-	this.client.quit();
+	client.quit();
 }
 
 var informationReceived = function(err, replies)
@@ -49,7 +49,7 @@ var informationReceived = function(err, replies)
 	}
 	else
 	{
-		quitClient();
+		quitClient(this.client);
 	}
 }
 
@@ -113,7 +113,7 @@ var winsAdded = function(err, replies)
 		seasonMulti.exec();
 	}
 
-	quitClient();
+	quitClient(this.client);
 }
 
 function getCurrentDay()
