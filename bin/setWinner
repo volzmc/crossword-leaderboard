@@ -13,7 +13,7 @@ var getTodaysScores = function()
 	multi.exec(informationReceived.bind({"client": redis}));
 }
 
-var checkSeasonWinner()
+var checkSeasonWinner = function()
 {
 	var multi = this.client.multi();
 	multi.lrange("winnersList", 0, -1);
