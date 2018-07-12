@@ -20,7 +20,7 @@ var checkSeasonWinner = function()
 	multi.exec(winsAdded.bind({"client": this.client}));
 }
 
-var quitClient()
+var quitClient = function()
 {
 	this.client.quit();
 }
