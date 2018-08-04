@@ -47,62 +47,70 @@ function displayHome()
 	multi.hgetall("Shafat Hossain");
 	multi.hgetall("David Lonergan");
 	multi.hgetall("Alyson Meister");
-	multi.lrange("winnersList", 0, -1);
+    multi.lrange("winnersList", 0, -1);
+    multi.lrange("seasonWinners", 0, -1);
 	multi.exec(displayTimes.bind({"response": this.res, "pug": pug}));
 }
 
 var displayTimes = function(err, replies)
 {
 	var i, topTimes, todaysTimes, html, topScoresTable, todaysScoresTable,
-		winsByName, winsByNameTable, streakInfo, streakInfoTable, htmlData,
+		winsByName, winsByNameTable, streakInfo, streakInfoTable, htmlData, seasonWinners,
 		mattAverageTime, shafatAverageTime, ashwinAverageTime, davidAverageTime, alysonAverageTime;
 	for (i = 0; i < replies.length; i++)
 	{
-		if (i == 0)
-		{
-			todaysTimes = getTodaysTimes(replies[i]);
-		}
-		else if (i == 1)
-		{
-			topTimes = getTopTimes(replies[i]);
-		}
-		else if (i == 2)
-		{
-			mattAverageTime = getAverageTime(replies[i]);
-		}
-		else if (i == 3)
-		{
-			ashwinAverageTime = getAverageTime(replies[i]);
-		}
-		else if (i == 4)
-		{
-			shafatAverageTime = getAverageTime(replies[i]);
-		}
-		else if (i == 5)
-		{
-			davidAverageTime = getAverageTime(replies[i]);
-		}
-		else if (i == 6)
-		{
-			alysonAverageTime = getAverageTime(replies[i]);
-		}
-		else if (i == 7)
-		{
-			winsByName = getWinsByName(replies[i], mattAverageTime, ashwinAverageTime, shafatAverageTime, davidAverageTime, alysonAverageTime);
-			streakInfo = getStreakInfo(replies[i]);
-		}
+        if (i == 0) {
+            todaysTimes = getTodaysTimes(replies[i]);
+        }
+        else if (i == 1) {
+            topTimes = getTopTimes(replies[i]);
+        }
+        else if (i == 2) {
+            mattAverageTime = getAverageTime(replies[i]);
+        }
+        else if (i == 3) {
+            ashwinAverageTime = getAverageTime(replies[i]);
+        }
+        else if (i == 4) {
+            shafatAverageTime = getAverageTime(replies[i]);
+        }
+        else if (i == 5) {
+            davidAverageTime = getAverageTime(replies[i]);
+        }
+        else if (i == 6) {
+            alysonAverageTime = getAverageTime(replies[i]);
+        }
+        else if (i == 7) {
+            winsByName = getWinsByName(replies[i], mattAverageTime, ashwinAverageTime, shafatAverageTime, davidAverageTime, alysonAverageTime);
+            streakInfo = getStreakInfo(replies[i]);
+        }
+        else if (i == 8) {
+            seasonWinners = getSeasonWinners(replies[i]);
+        }
 	}
 
 	htmlData = {
 		"topScores": topTimes,
 		"todaysScores": todaysTimes,
 		"winsByName": winsByName,
-		"streakInfo": streakInfo,
+        "streakInfo": streakInfo,
+        "seasonWinners": seasonWinners
 	}
 
 	html = this.pug.renderFile('templates/homeview.pug', htmlData);
 	this.response.writeHead(200, {"Content-Type": "text/html"});
 	this.response.end(html);
+}
+
+var getSeasonWinners = function (scores) {
+    var seasonWinners = [];
+    for (var i = 0; i < scores.length; i++) {
+        var winner = {};
+        winner.name = scores[i];
+        winner.seasonNumber = i + 1;
+        seasonWinners.push(winner);
+    }
+    return seasonWinners;
 }
 
 var getTopTimes = function(scores)

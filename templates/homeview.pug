@@ -51,6 +51,19 @@ html
 								td=dataRow.wins
 								td=dataRow.averageTime
 		div(class="tableDiv")
+			div(class="seasonWinners")
+				h2 Season Winners
+				table(class="timetable")
+					thead
+						tr
+							th Season
+							th Player
+					tbody
+						each dataRow in seasonWinners
+							tr
+								td=dataRow.seasonNumber
+								td=dataRow.name
+		div(class="tableDiv")
 			div(class="topScores")
 				h2 Top Times
 				table(class="timetable")
