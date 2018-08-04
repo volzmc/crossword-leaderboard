@@ -104,7 +104,7 @@ var displayTimes = function(err, replies)
 
 var getSeasonWinners = function (scores) {
     var seasonWinners = [];
-    for (var i = 0; i < scores.length; i++) {
+    for (var i = scores.length - 1; i >= 0; i--) {
         var winner = {};
         winner.name = scores[i];
         winner.seasonNumber = i + 1;
