@@ -107,10 +107,10 @@ var getSeasonWinners = function (scores) {
     for (var i = scores.length - 1; i >= 0; i--) {
         var winner = {};
         winner.name = scores[i];
-        winner.seasonNumber = i + 1;
+        winner.seasonNumber = scores.length - i;
         seasonWinners.push(winner);
     }
-    return seasonWinners.reverse();
+    return seasonWinners;
 }
 
 var getTopTimes = function(scores)
